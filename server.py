@@ -5,21 +5,23 @@ app = Flask("Emotion Detector")
 
 @app.route("/emotionDetector")
 def sent_detector():
-    # Retrieve the text to analyze from the request arguments
     text_to_analyze = request.args.get('textToAnalyze')
-
-    # Pass the text to the emotion_detector function and store the response
     response = emotion_detector(text_to_analyze)
 
-    # Extract the emotions and dominant_emotion from the response
+    # Extract dominant_emotion to check for None
+    dominant_emotion = response['dominant_emotion']
+
+    # Error handling for blank or invalid input
+    if dominant_emotion is None:
+        return "Invalid text! Please try again!"
+
+    # Normal response formatting
     anger = response['anger']
     disgust = response['disgust']
     fear = response['fear']
     joy = response['joy']
     sadness = response['sadness']
-    dominant_emotion = response['dominant_emotion']
 
-    # Return a formatted string with the sentiment analysis results
     return (
         f"For the given statement, the system response is 'anger': {anger}, "
         f"'disgust': {disgust}, 'fear': {fear}, 'joy': {joy} and 'sadness': {sadness}. "
